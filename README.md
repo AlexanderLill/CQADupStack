@@ -1,3 +1,6 @@
+#### Note: My Goal is to port the script to python3 and refactor a bit so more people can use this script in the future. 
+
+
 The scripts in this directory can be used to manipulate the CQADupStack data, downloadable from http://nlp.cis.unimelb.edu.au/resources/cqadupstack/.
 
 CQADupStack contains 12 Stackexchange (http://stackexchange.com/) subforums which have been preprocessed as described in the paper mentioned below.
