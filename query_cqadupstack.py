@@ -224,8 +224,8 @@ class Subforum():
         return random.choice(allids)
 
     def get_random_pair_of_posts(self):
-        """ 
-        Takes no input and returns a tuple with two random post ids and a duplicate verdict. The second is always lower than the first. 
+        """
+        Takes no input and returns a tuple with two random post ids and a duplicate verdict. The second is always lower than the first.
         Example: (4865, 553, 'dup')
         Other values for the verdict are: 'related' and 'nondup'.
         """
@@ -308,7 +308,7 @@ class Subforum():
         return self.postdict[postid]["viewcount"]
 
     def get_postfavoritecount(self, postid):
-        """ 
+        """
         Takes a post id as input and returns an integer representing the nr of times this post has been favoured by a user.
         More information on what that means can be found here: http://meta.stackexchange.com/questions/53585/how-do-favorite-questions-work
         """
@@ -327,7 +327,7 @@ class Subforum():
         return self.postdict[postid]['userid']
 
     def get_duplicates(self, postid):
-        """ 
+        """
         Takes a post id as input and returns a list of ids of posts that have been labeled as a duplicate of it.
         """
         return list(self.postdict[postid]['dups'].keys())
@@ -345,8 +345,8 @@ class Subforum():
         return self.postdict[postid]['tags']
 
     def get_duptagdates(self, postid1, postid2):
-        """ 
-        Takes two post ids as input and returns a list of dates on which this pair received a duplicate tag, 
+        """
+        Takes two post ids as input and returns a list of dates on which this pair received a duplicate tag,
         in %Y-%m-%dT%H:%M:%S.%f format.
         Usually the list only contains one date, but sometimes it contains multiple.
         """
@@ -357,8 +357,8 @@ class Subforum():
             ddates_raw = self.postdict[postid1]['dups'][postid2]['votedates']
         ddates = []
         for ddate in ddates_raw:
-            #datet = datetime.datetime.strptime(ddate, "%Y-%m-%dT%H:%M:%S.%f")
-            #dates.append(str(datet.year) + '-' + datet.strftime('%m') + '-' + datet.strftime('%d'))
+            # datet = datetime.datetime.strptime(ddate, "%Y-%m-%dT%H:%M:%S.%f")
+            # dates.append(str(datet.year) + '-' + datet.strftime('%m') + '-' + datet.strftime('%d'))
             ddates.append(ddate)
         return ddates
 
@@ -462,16 +462,16 @@ class Subforum():
         return cdate.strftime('%H') + ':' + cdate.strftime('%M') + ':' + cdate.strftime('%S')
 
     def get_answerscore(self, answerid):
-        """ 
-        Takes an answer id as input and returns an integer representing the score of the answer. 
-        This is the number of upvotes minus the number of downvotes is has received. 
+        """
+        Takes an answer id as input and returns an integer representing the score of the answer.
+        This is the number of upvotes minus the number of downvotes is has received.
         """
         return self.answerdict[answerid]["score"]
 
     def get_answeruserid(self, answerid):
-        """ 
-        Takes an answer id as input and returns the userid of the person that posted it. 
-        Returns False if the user is not known. 
+        """
+        Takes an answer id as input and returns the userid of the person that posted it.
+        Returns False if the user is not known.
         """
         return self.answerdict[answerid]['userid']
 
@@ -481,7 +481,7 @@ class Subforum():
 
     def get_post_comments(self, postid):
         """
-        Takes a post id as input and returns a list of comment ids. 
+        Takes a post id as input and returns a list of comment ids.
         """
         return self.postdict[postid]['comments']
 
@@ -618,7 +618,7 @@ class Subforum():
 
     def get_user_badges(self, userid):
         """
-        Takes a user id as input and returns a list of the badges this user has earned. 
+        Takes a user id as input and returns a list of the badges this user has earned.
         Information on what badges are and which ones can be earned can be found here: http://stackoverflow.com/help/badges
         """
         return self.userdict[userid]['badges']
@@ -648,7 +648,7 @@ class Subforum():
             self.__stopwords.append(line)
 
     def change_to_default_stopwords(self, stopwordset='middle'):
-        """ 
+        """
         Changes the stopword list to one of the supplied ones: 'nltk', 'indri', 'short' or 'middle'. 'Middle' is the default.
         The NLTK stopword list contains 127 stopwords. (http://www.nltk.org/book/ch02.html#code-unusual)
         The Indri stopword list contains 418 stopwords. (http://www.lemurproject.org/stopwords/stoplist.dft)
@@ -671,7 +671,7 @@ class Subforum():
             self.__stopwords = self.__middle_stopwords  # DEFAULT
 
     def perform_cleaning(self, s, maxcodelength=150, remove_stopwords=False, remove_punct=False, stem=False):
-        """ 
+        """
         Takes a string as input and returns a cleaned version.
         - The string will be lowercased and newlines removed.
         - HTML tags will be removed.
@@ -835,7 +835,7 @@ class Subforum():
         prevw_in_split = True
         for w in words:
             # It used to be so beautiful and simple, until I found out that NLTK splits some things wrongly...
-            #neww = nltk.PorterStemmer().stem_word(w)
+            # neww = nltk.PorterStemmer().stem_word(w)
             # newwords.append(neww)
 
             if words_split[counter] == w:  # word was correctly split
@@ -967,10 +967,10 @@ class Subforum():
         return s
 
     def _general_cleaning(self, s, codes, remove_punct=False):
-        """ 
+        """
         Takes a string as input and False or True for the argument 'remove_punct'.
         Depending on the value of 'remove_punct', all punctuation is either removed, or a space is added before and after.
-        In both cases the punctuation un URLs and numbers is retained. 
+        In both cases the punctuation un URLs and numbers is retained.
 
         Also transforms "&amp;" into "and", and removes all other HTML entities.
         Removes excessive white space.
@@ -1110,15 +1110,15 @@ class Subforum():
     #################
 
     def split_for_classification(self, outputdir='.'):
-        """ 
+        """
         Takes a directory as input and writes twelve plain text files to this directory: a small test set, a large test set, and 10 files for the training set (trainpairs_[01-10].txt, testpairs_small.txt and testpairs_large.txt).
         Each line in these sets contains two postids and a label (1 for duplicate, 0 for non-duplicate), separated by a space. Each of these pairs is a training or test instance.
         The training pairs have been divided over ten different files, each with a similar class distribution. These can be used for ten-fold cross-validation.
 
         To make the split all posts are ordered according to date. Next the set is cut into two at a certain date.
         This date is chosen such that the test set will ideally contain at least 200 duplicate pairs, or if that iss not possible, as many as possible, with a minimum of 100, and the train set contains at least four times as many.
-        The test set contains pairs of posts with a date after the cutoff date. Posts are only combined with older posts, as would be the case in a real world setting. The training set contains pairs of posts with a date before the cutoff date. Again, posts are only combined with older posts. 
-        A consequence of this approach is that we lose a number of duplicate pairs, namely the ones that are posted after the cutoff date, but their duplicate was posted before. 
+        The test set contains pairs of posts with a date after the cutoff date. Posts are only combined with older posts, as would be the case in a real world setting. The training set contains pairs of posts with a date before the cutoff date. Again, posts are only combined with older posts.
+        A consequence of this approach is that we lose a number of duplicate pairs, namely the ones that are posted after the cutoff date, but their duplicate was posted before.
         Both testpairs_large.txt and the trainpairs files will contain millions of pairs.
         Testpairs_small.txt contains a subset of testpairs_large.txt. It is a smaller and more balanced set, which contains ten times more non-duplicate pairs than duplicate pairs."""
 
