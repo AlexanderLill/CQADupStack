@@ -3,7 +3,7 @@
 
 from setuptools import setup
 
-setup(name='cqadupstack',
+setup(name='CQADupStack',
       version='0.1',
       description='Scripts to query cqadupstack',
       url='https://github.com/D1Doris/CQADupStack',
