@@ -10,6 +10,6 @@ setup(name='CQADupStack',
       author='Doris Hoogeveen',
       author_email='',
       license='Apache',
-      packages=['cqadupstack'],
+      packages=['query_cqadupstack'],
       install=['six', 'scipy', 'nltk'],
       zip_safe=False)

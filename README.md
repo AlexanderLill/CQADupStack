@@ -58,7 +58,12 @@ Subforum objects can be queried using the following methods: (examples on how to
 
 ## SAMPLE USAGE ##
 
-    Here are some examples of how to use the script:
+In root of the this repo.
+```bash
+$ pip install .
+```
+
+Here are some examples of how to use the script:
 
 ```python
 
@@ -133,8 +138,6 @@ Takes no input and makes twelve plain text files: a small test set, a large test
 Each line in these sets contains two postids and a label (1 for duplicate, 0 for non-duplicate), separated by a space. Each of these pairs is a training or test instance. 
 
 The training pairs have been divided over ten different files. These can be used for ten-fold cross-validation. 
-
- 
 
 To make the split all posts are ordered according to date. Next the set is cut into two at a certain date. 
 
