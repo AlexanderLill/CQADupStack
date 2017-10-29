@@ -56,9 +56,77 @@ Alternatively, you can make a subforum object directly by calling the class 'Sub
 
 Subforum objects can be queried using the following methods: (examples on how to use them can be found at the end of this file)
 
-#### SPLIT METHODS ####
+## SAMPLE USAGE ##
 
--  split_for_classification(self) 
+    Here are some examples of how to use the script:
+
+```python
+
+    >>>> import query_cqadupstack as qcqa 
+    >>>> o = qcqa.load_subforum('/home/hoogeveen/datasets/CQADupStack/webmasters.zip') 
+    >>>> testset, develset, indexset = o.split_for_retrieval() 
+    >>>> len(develset) 
+
+    >1862 
+
+    >>>> for i in develset: 
+    >...     if o.get_duplicates(i) != []: 
+    >... print i, o.get_duplicates(i) 
+    >...  
+
+    >69050 [u'8710'] 
+    >68979 [u'52812'] 
+    >68897 [u'6073'] 
+    >68856 [u'6073'] 
+    >68689 [u'20838'] 
+    >etc. 
+
+    >>>> o.get_posttitle('18957') 
+    >u'What do you consider a "mobile" device?' 
+
+    >>>> o.get_postbody('18957') 
+    >u'\<p\>I'm implementing a mobile-friendly version of our corporate web site and will be using \<a href="http://wurfl.sourceforge.net/" rel="nofollow" title="WURFL"\>WURFL\</a\> to detect mobile browsers and redirect them to our mobile site.  Having recently purchased an Android tablet, I've found that many sites consider it to be a mobile device even though it has a large 10" screen and it's perfectly capable of handling sites designed using standard desktop resolutions.\</p\>\<p\>My plan is to use WURFL, examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device, but I'd like some input as to that sweet spot for determining mobile vs desktop.\</p\>
+\' 
+
+    >>>> o.perform_cleaning(o.get_postbody('18957')) 
+    >u'i am implementing a mobile-friendly version of our corporate web site and will be using wurfl to detect mobile browsers and redirect them to our mobile site . having recently purchased an android tablet , i have found that many sites consider it to be a mobile device even though it has a large 10" screen and it is perfectly capable of handling sites designed using standard desktop resolutions . my plan is to use wurfl , examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device , but i would like some input as to that sweet spot for determining mobile vs desktop .' 
+
+    >>>> for a in o.get_answers('18957'): 
+    >...     print a, o.get_answerscore(a) 
+    >...  
+    >18985 1 
+    >18980 0 
+
+    >>>> o.get_tags(o.get_random_postid()) 
+    >[u'wordpress', u'redirects', u'blog', u'plugin'] 
+
+    >>>> o.get_postuserid('18957') 
+    >u'1907' 
+
+    >>>> o.get_user_posts('1907') 
+    >[u'18957'] 
+
+    >>>> o.get_user_views('1907') 
+    >6 
+
+    >>>> o.stopwords 
+    >['in', 'on', 'at', 'a', 'an', 'is', 'be', 'was', 'I', 'you', 'the', 'do', 'did', 'of', 'so', 'for', 'with'] 
+
+    >>>> o.supply_stopwords('new_stopwords_testfile.txt') 
+
+    >>>> o.stopwords 
+    >[u'new_stopword1', u'new_stopword2', u'new_stopword3'] 
+
+    >>>> o.change_to_default_stopwords() 
+
+    >>>> o.stopwords 
+    >['in', 'on', 'at', 'a', 'an', 'is', 'be', 'was', 'I', 'you', 'the', 'do', 'did', 'of', 'so', 'for', 'with'] 
+
+```
+
+## SPLIT METHODS ##
+
+#### split_for_classification(self) 
 
 Takes no input and makes twelve plain text files: a small test set, a large test set, and 10 files for the training set (trainpairs_[01-10].txt, testpairs_small.txt and testpairs_large.txt). 
 
@@ -82,7 +150,7 @@ Testpairs_small.txt contains a subset of testpairs_large.txt. It is a smaller an
 
      
 
--  split_for_retrieval(self) 
+#### split_for_retrieval(self) 
 
 Takes no input and returns three lists: one with test ids, one with development ids and one with ids to be indexed. 
 
@@ -95,9 +163,9 @@ Both test and development sets also contain posts that do not have any duplicate
      
 
 
-#### GENERAL POST/QUESTION METHODS ####
+## GENERAL POST/QUESTION METHODS ##
 
--  get_posts_with_and_without_duplicates(self) 
+#### get_posts_with_and_without_duplicates(self) 
 
 Takes no input and returns two lists: one with all posts that have at least one duplicate, and one with all posts that don't have any duplicates. In that order. 
 
@@ -105,25 +173,25 @@ Calling this method is quicker than calling get_posts_with_duplicates() followed
 
    
 
--  get_posts_with_duplicates(self) 
+#### get_posts_with_duplicates(self) 
 
 Takes no input and returns a list of all posts that have at least one duplicate. 
 
    
 
--  get_posts_without_duplicates(self) 
+#### get_posts_without_duplicates(self) 
 
 Takes no input and returns a list of all posts that don't have any duplicates. 
 
     
 
--  get_ordered_list_of_posts(self) 
+#### get_ordered_list_of_posts(self) 
 
 Takes no input and returns a list of tuples (postid, datetime object), ordered chronologically from newest to oldest post. 
 
     
 
--  get_random_pair_of_posts(self) 
+#### get_random_pair_of_posts(self) 
 
 Takes no input and returns a tuple with two random post ids and a duplicate verdict. The second is always lower than the first.  
 
@@ -133,19 +201,19 @@ Other values for the verdict are: 'related' and 'nondup'.
 
     
 
--  get_random_postid(self) 
+#### get_random_postid(self) 
 
 Takes no input and returns a random post id. 
 
     
 
--  get_all_postids(self) 
+#### get_all_postids(self) 
 
 Takes no input and returns a list of ALL post ids. 
 
     
 
--  get_true_label(self, postid1, postid2) 
+#### get_true_label(self, postid1, postid2) 
 
 Takes two postids as input and returns the true label, which is one of "dup", "nodup" or "related". 
 
@@ -154,43 +222,43 @@ Takes two postids as input and returns the true label, which is one of "dup", "n
 
 #### PARTICULAR POST/QUESTION METHODS ####
 
--  get_posttitle(self, postid) 
+#### get_posttitle(self, postid) 
 
 Takes a post id as input and returns the title of the post. 
 
     
 
--  get_postbody(self, postid) 
+#### get_postbody(self, postid) 
 
 Takes a post id as input and returns the body of the post. 
 
     
 
--  get_post_title_and_body(self, postid) 
+#### get_post_title_and_body(self, postid) 
 
 Takes a post id as input and returns the title and the body of the post together as one string, so in other words, the full initial post. 
 
     
 
--  get_postdate(self, postid) 
+#### get_postdate(self, postid) 
 
 Takes a post id as input and returns the date the post was posted in YYYY-MM-DD format. 
 
     
 
--  get_posttime(self, postid) 
+#### get_posttime(self, postid) 
 
 Takes a post id as input and returns the time the post was posted in HH:MM:SS format. 
 
     
 
--  get_viewcount(self, postid) 
+#### get_viewcount(self, postid) 
 
 Takes a post id as input and returns the number of times the post has been looked at by users. 
 
     
 
--  get_favoritecount(self, postid) 
+#### get_favoritecount(self, postid) 
 
 Takes a post id as input and returns an integer representing the nr of times this post has been favoured by a user. 
 
@@ -198,88 +266,88 @@ More information on what that means can be found here: http://meta.stackexchange
 
     
 
--  get_postscore(self, postid) 
+#### get_postscore(self, postid) 
 
 Takes a post id as input and returns the score of the post. This is the number of upvotes minus the number of downvotes is has received. 
 
     
 
--  get_postuserid(self, postid) 
+#### get_postuserid(self, postid) 
 
 Takes a post id as input and returns the userid of the person that posted it. Returns False if the user is not known. 
 
     
 
--  get_duplicates(self, postid) 
+#### get_duplicates(self, postid) 
 
 Takes a post id as input and returns a list of ids of posts that have been labeled as a duplicate of it. 
 
       
 
--  get_related(self, postid) 
+#### get_related(self, postid) 
 
 Takes a post id as input and returns a list of ids of posts that have been labeled as related to it. 
 
     
 
--  get_tags(self, postid) 
+#### get_tags(self, postid) 
 
 Takes a post id as input and returns a list of tags. 
 
     
 
 
-#### ANSWER METHODS ####
+## ANSWER METHODS ##
 
--  get_answers(self, postid) 
+#### get_answers(self, postid) 
 
 Takes a post id as input and returns a list of answer ids. 
 
     
 
--  get_answercount(self, postid) 
+#### get_answercount(self, postid) 
 
 Takes a post id as input and returns an integer representing the number of answers it has received. 
 
     
 
--  get_answer_parentid(self, answerid) 
+#### get_answer_parentid(self, answerid) 
 
 Takes an answer id as input and returns its parent id: the id of the post it is an answer of. 
 
     
 
--  get_acceptedanswer(self, postid) 
+#### get_acceptedanswer(self, postid) 
 
 Takes a post id as input and returns the answer id of the accepted answer if it exists, else it returns False. 
 
     
 
--  get_answerbody(self, answerid) 
+#### get_answerbody(self, answerid) 
 
 Takes an answer id as input and returns the body of the answer. That is the text of the answer. 
 
     
 
--  get_answerdate(self, answerid) 
+#### get_answerdate(self, answerid) 
 
 Takes an answer id as input and returns the date the answer was posted in YYYY-MM-DD format. 
 
     
 
--  get_answertime(self, answerid) 
+#### get_answertime(self, answerid) 
 
 Takes an answer id as input and returns the time the answer was posted in HH:MM:SS format. 
 
     
 
--  get_answerscore(self, answerid) 
+#### get_answerscore(self, answerid) 
 
 Takes an answer id as input and returns an integer representing the score of the answer. This is the number of upvotes minus the number of downvotes is has received. 
 
     
 
--  get_answeruserid(self, answerid) 
+#### get_answeruserid(self, answerid) 
 
 Takes an answer id as input and returns the userid of the person that posted it. Returns False if the user is not known. 
 
@@ -288,76 +356,76 @@ Takes an answer id as input and returns the userid of the person that posted it.
 
 #### COMMENT METHODS ####
 
--  get_post_comments(self, postid) 
+#### get_post_comments(self, postid) 
 
 Takes a post id as input and returns a list of comment ids. 
 
     
 
--  get_answer_comments(self, answerid) 
+#### get_answer_comments(self, answerid) 
 
 Takes an answer id as in put and returns a list of comment ids. 
 
     
 
--  get_post_commentcount(self, postid) 
+#### get_post_commentcount(self, postid) 
 
 Takes a post id as input and returns and integer representing the number of comments this post has received. 
 
     
 
--  get_answer_commentcount(self, answerid) 
+#### get_answer_commentcount(self, answerid) 
 
 Takes an answer id as input and returns and integer representing the number of comments this answer has received. 
 
   
   
--  get_comment_parentid(self, commentid) 
+#### get_comment_parentid(self, commentid) 
 
 Takes a comment id as input and returns its parent id: the id of the post or answer it is a comment to. 
 
     
 
--  get_comment_parenttype(self, commentid) 
+#### get_comment_parenttype(self, commentid) 
 
 Takes a comment id as input and returns either 'question' or 'answer', depending on the type of its parent id. 
 
     
 
--  get_commentbody(self, commentid) 
+#### get_commentbody(self, commentid) 
 
 Takes a comment id as input and returns the body of the comment. 
 
     
 
--  get_commentdate(self, commentid) 
+#### get_commentdate(self, commentid) 
 
 Takes a comment id as input and returns the date the comment was posted, in YYYY-MM-DD format. 
 
     
 
--  get_commenttime(self, commentid) 
+#### get_commenttime(self, commentid) 
 
 Takes a comment id as input and returns the time the comment was posted, in HH:MM:SS format. 
 
     
 
--  get_commentscore(self, commentid) 
+#### get_commentscore(self, commentid) 
 
 Takes a comment id as input and returns an integer representing the score of the comment. This is the number of upvotes minus the number of downvotes is has received. 
 
     
 
--  get_commentuserid(self, commentid) 
+#### get_commentuserid(self, commentid) 
 
 Takes a comment id as input and returns the id of the user that posted the comment. 
 
     
 
 
-#### USER METHODS ####
+## USER METHODS ##
 
--  get_user_reputation(self, userid) 
+#### get_user_reputation(self, userid) 
 
 Takes a user id as input and outputs an integer representing the reputation of the user. 
 
@@ -365,55 +433,55 @@ Information on what this means and how it is calculated can be found here http:/
 
     
 
--  get_user_views(self, userid) 
+#### get_user_views(self, userid) 
 
 Takes a user id as input and outputs an integer representing how often people have viewed a post by this user. 
 
    
 
--  get_user_upvotes(self, userid) 
+#### get_user_upvotes(self, userid) 
 
 Takes a user id as input and outputs an integer representing how many upvotes on posts or answers this user has received. 
 
     
 
--  get_user_downvotes(self, userid) 
+#### get_user_downvotes(self, userid) 
 
 Takes a user id as input and outputs an integer representing how many downvotes on posts or answers this user has received. 
 
     
 
--  get_user_joindate(self, userid) 
+#### get_user_joindate(self, userid) 
 
 Takes a user id as input and outputs the date this user joined this subforum, in YYYY-MM-DD format. 
 
     
 
--  get_user_lastaccess(self, userid) 
+#### get_user_lastaccess(self, userid) 
 
 Takes a user id as input and outputs the last time this user has logged into this subforum, in YYYY-MM-DD format. 
 
   
   
--  get_user_age(self, userid) 
+#### get_user_age(self, userid) 
 
 Takes a user id as input and outputs the user's age as an integer, if known. Else it returns 'unknown'. 
 
     
 
--  get_user_posts(self, userid) 
+#### get_user_posts(self, userid) 
 
 Takes a user id as input and returns a list of the question posts he/she has made. 
 
      
 
--  get_user_answers(self, userid) 
+#### get_user_answers(self, userid) 
 
 Takes a user id as input and returns a list of the answers he/she has written. 
 
     
 
--  get_user_badges(self, userid) 
+#### get_user_badges(self, userid) 
 
 Takes a user id as input and returns a list of the badges this user has earned.  
 
@@ -422,15 +490,15 @@ Information on what badges are and which ones can be earned can be found here: h
   
   
 
-#### CLEANING/PREPROCESSING METHODS ####
+## CLEANING/PREPROCESSING METHODS ##
 
--  tokenize(self, s) 
+#### tokenize(self, s) 
 
 Takes a string as input, tokenizes it using NLTK (http://www.nltk.org) and returns a list of the tokens. 
 
     
 
--  supply_stopwords(self, filename) 
+#### supply_stopwords(self, filename) 
 
 Takes as input a plain text file encoded in UTF-8 with one stop word per line and saves these internally in a stop word list. 
 
@@ -438,12 +506,12 @@ This list will be used in cleaning if perform_cleaning() is called with remove_s
 
     
 
--  Data descriptor stopwords: 
+#### Data descriptor stopwords: 
 
 Returns the current list of words that is used as the stop word list. It can be accessed via self.stopwords 
 
 
--  change_to_default_stopwords(self, stopwordset='middle') 
+#### change_to_default_stopwords(self, stopwordset='middle') 
 
 Changes the stopword list to one of the supplied ones: 'nltk', 'indri', 'short' or 'middle'. 'Middle' is the default. 
 
@@ -461,7 +529,7 @@ If the data is not downloaded first, the script will default to the NLTK stopwor
 
     
 
--  perform_cleaning(self, s, remove_stopwords=False, remove_punct=False, stem=False) 
+#### perform_cleaning(self, s, remove_stopwords=False, remove_punct=False, stem=False) 
 
 Takes a string as input and returns a cleaned version. 
 
@@ -493,15 +561,15 @@ stem: stemming is performed via the Porter stemmer as implemented in the NLTK (h
 
     
 
--  url_cleaning(self, s) 
+#### url_cleaning(self, s) 
 
 Takes a string as input and removes references to possible duplicate posts, and other stackexchange urls.
    
 
 
-#### EVALUATION METHODS FOR RETRIEVAL ####
+## EVALUATION METHODS FOR RETRIEVAL ##
 
--  average_ndcg_at(self, scorefile, cutoff=None, include_related_posts=False) 
+#### average_ndcg_at(self, scorefile, cutoff=None, include_related_posts=False) 
 
 Takes a file with scores and a cutoff point as input and returns the Normalised Discounted Cumulative Gain at the cutoff point. The default is 10. 
 
@@ -515,7 +583,7 @@ Just for extra information: Taking related posts into account can lower the scor
 
     
 
--  average_precision_at(self, scorefile, cutoff=None, include_related_posts=False) 
+#### average_precision_at(self, scorefile, cutoff=None, include_related_posts=False) 
 
 Takes a file with scores and optionally a cutoff point as input and returns the Precision (at this cutoff, if specified).  
 
@@ -525,7 +593,7 @@ Only queries with relevant posts are taken into account. Queries with ONLY relat
 
     
 
--  average_recall_at(self, scorefile, cutoff=None, include_related_posts=False) 
+#### average_recall_at(self, scorefile, cutoff=None, include_related_posts=False) 
 
 Takes a file with scores and optionally a cutoff point as input and returns the Recall (at this cutoff, if specified).  
 
@@ -535,7 +603,7 @@ Only queries with relevant posts are taken into account. Queries with ONLY relat
 
     
 
--  mean_average_precision(self, scorefile, include_related_posts=False) 
+#### mean_average_precision(self, scorefile, include_related_posts=False) 
 
 Takes a file with scores as input and returns the Mean Average Precision (MAP) score. 
 
@@ -545,7 +613,7 @@ Only queries with relevant posts are taken into account. Queries with ONLY relat
 
     
 
--  mean_reciprocal_rank(self, scorefile) 
+#### mean_reciprocal_rank(self, scorefile) 
 
 Takes a file with scores as input and returns the Mean Reciprocal Rank (MRR) score. 
 
@@ -560,9 +628,9 @@ queryid2    result1 result2 result3 etc.
 Both the query id and results should be post ids. They should be separated either by a space or a TAB.
 
 
-#### EVALUATION METHODS FOR CLASSIFICATION ####
+## EVALUATION METHODS FOR CLASSIFICATION ##
 
--  evaluate_classification(self, scorefile) 
+#### evaluate_classification(self, scorefile) 
 
 Takes a file with scores as input and returns a dictionary with the Precision, Recall, F1-score, Accuracy and Precision and Recall per class. 
 
@@ -572,103 +640,15 @@ One line per classification with two space separated postids followed by a 1 for
 
    
 
--  plot_roc(self, scorefile, plotfilename) 
+#### plot_roc(self, scorefile, plotfilename) 
 
 Takes a file with scores and a the name of a plot file (png) as input and returns the false positive rates (list), true positive rates (list), thresholds at which they were computed (list) and the area under the curve (float). The plot will be written to the supplied plot file. 
 
 The scores can either be probability estimates of the positive class, confidence values, or binary decisions. 
+
 This method requires scikit-learn to be installed: http://scikit-learn.org/stable/install.html 
 This method only computes the ROC curve for the positive class. See http://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html for an example on how to make curves for multiple classes (for instance when you have a third class for the related questions).   
 
-```python
-
-    Here are some examples of how to use the script:
-
-    >\>\>\> import query_cqadupstack as qcqa 
-
-    >\>\>\> o = qcqa.load_subforum('/home/hoogeveen/datasets/CQADupStack/webmasters.zip') 
-
-    >\>\>\> testset, develset, indexset = o.split_for_retrieval() 
-
-    >\>\>\> len(develset) 
-
-    >1862 
-
-    >\>\>\> for i in develset: 
-
-    >...     if o.get_duplicates(i) != []: 
-
-    >... print i, o.get_duplicates(i) 
-
-    >...  
-
-    >69050 [u'8710'] 
-
-    >68979 [u'52812'] 
-
-    >68897 [u'6073'] 
-
-    >68856 [u'6073'] 
-
-    >68689 [u'20838'] 
-
-    >etc. 
-
-    >\>\>\> o.get_posttitle('18957') 
-
-    >u'What do you consider a "mobile" device?' 
-
-    >\>\>\> o.get_postbody('18957') 
-
-    >u'\<p\>I'm implementing a mobile-friendly version of our corporate web site and will be using \<a href="http://wurfl.sourceforge.net/" rel="nofollow" title="WURFL"\>WURFL\</a\> to detect mobile browsers and redirect them to our mobile site.  Having recently purchased an Android tablet, I've found that many sites consider it to be a mobile device even though it has a large 10" screen and it's perfectly capable of handling sites designed using standard desktop resolutions.\</p\>\<p\>My plan is to use WURFL, examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device, but I'd like some input as to that sweet spot for determining mobile vs desktop.\</p\>
-\' 
-
-    >\>\>\> o.perform_cleaning(o.get_postbody('18957')) 
-
-    >u'i am implementing a mobile-friendly version of our corporate web site and will be using wurfl to detect mobile browsers and redirect them to our mobile site . having recently purchased an android tablet , i have found that many sites consider it to be a mobile device even though it has a large 10" screen and it is perfectly capable of handling sites designed using standard desktop resolutions . my plan is to use wurfl , examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device , but i would like some input as to that sweet spot for determining mobile vs desktop .' 
-
-    >\>\>\> for a in o.get_answers('18957'): 
-
-    >...     print a, o.get_answerscore(a) 
-
-    >...  
-
-    >18985 1 
-
-    >18980 0 
-
-    >\>\>\> o.get_tags(o.get_random_postid()) 
-
-    >[u'wordpress', u'redirects', u'blog', u'plugin'] 
-
-    >\>\>\> o.get_postuserid('18957') 
-
-    >u'1907' 
-
-    >\>\>\> o.get_user_posts('1907') 
-
-    >[u'18957'] 
-
-    >\>\>\> o.get_user_views('1907') 
-
-    >6 
-
-    >\>\>\> o.stopwords 
-
-    >['in', 'on', 'at', 'a', 'an', 'is', 'be', 'was', 'I', 'you', 'the', 'do', 'did', 'of', 'so', 'for', 'with'] 
-
-    >\>\>\> o.supply_stopwords('new_stopwords_testfile.txt') 
-
-    >\>\>\> o.stopwords 
-
-    >[u'new_stopword1', u'new_stopword2', u'new_stopword3'] 
-
-    >\>\>\> o.change_to_default_stopwords() 
-
-    >\>\>\> o.stopwords 
-
-    >['in', 'on', 'at', 'a', 'an', 'is', 'be', 'was', 'I', 'you', 'the', 'do', 'did', 'of', 'so', 'for', 'with'] 
-
-```
+`
 
 For questions please contact Doris Hoogeveen at doris dot hoogeveen at gmail.
