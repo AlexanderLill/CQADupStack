@@ -40,11 +40,15 @@ from six.moves import range, map
 # Written by Doris Hoogeveen Nov 2015. For a usage please call the script without arguments.
 
 
-def load_subforum(subforumzipped):
+def load_subforum(subforumzipped, tmp_dir = None):
     """
-    Takes a subforum.zip file as input and returns a StackExchange Subforum class object
+    Takes a subforum.zip file as input and returns a StackExchange Subforum class object.
+
+    Args:
+        subforumzipped: path to subforum.zip file
+        tmp_dir: optional path for directory where zip archive will be extracted 
     """
-    return Subforum(subforumzipped)
+    return Subforum(subforumzipped, tmp_dir)
 
 
 class Subforum():
