@@ -15,6 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import os
 import re
 import sys
@@ -44,7 +48,7 @@ def load_subforum(subforumzipped):
 
 
 class Subforum():
-    def __init__(self, zipped_catfile):
+    def __init__(self, zipped_catfile, tmp_dir = None):
         """
         This class takes a StackExchange subforum.zip file as input and makes it queryable via the methods below.
         Check to see if supplied file exists and is a valid zip file.
@@ -57,7 +61,7 @@ class Subforum():
             sys.exit('Please supply a valid StackExchange subforum.zip file.')
 
         self.cat = os.path.basename(zipped_catfile).split('.')[0]
-        self._unzip_and_load(zipped_catfile)
+        self._unzip_and_load(zipped_catfile, tmp_dir)
 
         # Stopwords for cleaning. They need to be initialised here in case someone accesses self.stopwords.
 
@@ -77,18 +81,18 @@ class Subforum():
         self.__stopwords = self.__middle_stopwords  # Default.
         self.cutoffdate = False  # Needed for classification splits.
 
-    def _unzip_and_load(self, zipped_catfile):
-        ziplocation = os.path.abspath(".")
+    def _unzip_and_load(self, zipped_catfile, tmp_dir ):
+        forum_dir = tmp_dir if tmp_dir else os.path.abspath(".")
         cat = os.path.basename(zipped_catfile).split('.')[0]
-        questionfile = ziplocation + '/' + cat + '/' + cat + '_questions.json'
-        answerfile = ziplocation + '/' + cat + '/' + cat + '_answers.json'
-        commentfile = ziplocation + '/' + cat + '/' + cat + '_comments.json'
-        userfile = ziplocation + '/' + cat + '/' + cat + '_users.json'
+        questionfile = os.path.join(forum_dir, cat, cat + '_questions.json')
+        answerfile = os.path.join(forum_dir, cat, cat + '_answers.json')
+        commentfile = os.path.join(forum_dir, cat, cat + '_comments.json')
+        userfile = os.path.join(forum_dir, cat, cat + '_users.json')
         if os.path.exists(questionfile) and os.path.exists(answerfile) and os.path.exists(userfile) and os.path.exists(commentfile):
             pass  # All good, we don't need to unzip anything
         else:
             zip_ref = zipfile.ZipFile(zipped_catfile, 'r')
-            zip_ref.extractall(ziplocation)
+            zip_ref.extractall(forum_dir)
 
         qf = codecs.open(questionfile, 'r', encoding='utf-8')
         self.postdict = json.load(qf)
