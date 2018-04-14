@@ -110,7 +110,7 @@ class Subforum():
         uf = codecs.open(userfile, 'r', encoding='utf-8')
         self.userdict = json.load(uf)
 
-        print("Loaded all data from", zipped_catfile)
+        print(("Loaded all data from %s. File unzipped to %s" % (zipped_catfile, forum_dir)))
 
     def tokenize(self, s):
         """
@@ -338,7 +338,7 @@ class Subforum():
         """
         Takes a post id as input and returns a list of ids of posts that have been labeled as a duplicate of it.
         """
-        return list(self.postdict[postid]['dups'].keys())
+        return self.postdict[postid]['dups']
 
     def get_related(self, postid):
         """
