@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import unittest
+import pytest
 import query_cqadupstack as cqa
 
 import os
@@ -14,12 +14,13 @@ from zipfile import ZipFile
 
 _TEST_FORUM_NAME = 'testforumf'
 
-def setUpModule():
+@pytest.fixture(scope="module")
+def forum_zip_archive():
     """
     Creates a zip fil which mimics the structure of subforum archive. 
     The zip is stored in tmp folder.
     """
-    
+
     zip_file_path, zip_file_folder_path = _get_zip_file_path()
         
     _remove_zip_file(zip_file_path)
@@ -31,17 +32,18 @@ def setUpModule():
         zipFile.writestr(('%s/%s_answers.json' % (_TEST_FORUM_NAME, _TEST_FORUM_NAME)), '{}')
         zipFile.writestr(('%s/%s_comments.json' % (_TEST_FORUM_NAME, _TEST_FORUM_NAME)), '{}')
         zipFile.writestr(('%s/%s_questions.json' % (_TEST_FORUM_NAME, _TEST_FORUM_NAME)), '{}')
-        zipFile.writestr(('%s/%s_users.json' % (_TEST_FORUM_NAME, _TEST_FORUM_NAME)), '{}')
+        zipFile.writestr(('%s/%s_users.json' % (_TEST_FORUM_NAME, _TEST_FORUM_NAME)), '{}')    
+    
+    yield zip_file_path, zip_file_folder_path
 
-def tearDownModule():
-    zip_file_path, _ = _get_zip_file_path()
     _remove_zip_file(zip_file_path)
 
-class SubforumUnzipTestCase(unittest.TestCase):
+
+class TestSubforumUnzip:
     
-    def test_unzip_current_dir(self):
+    def test_unzip_current_dir(self, forum_zip_archive):
         # arrange
-        zip_file_path, _ = _get_zip_file_path()        
+        zip_file_path, _ = forum_zip_archive        
         unziped_forum_path = self._get_cwd_foum_path()
         if os.path.exists(unziped_forum_path):
             shutil.rmtree(unziped_forum_path)
@@ -51,13 +53,14 @@ class SubforumUnzipTestCase(unittest.TestCase):
 
         # assert
         is_forum_unziped = os.path.exists(unziped_forum_path)
-        self.assertTrue(is_forum_unziped, ('Forum archive expected to be unzipped to "%s" ', unziped_forum_path))
+        
+        assert is_forum_unziped 
         
         shutil.rmtree(unziped_forum_path)
     
-    def test_unzip_custom_dir(self):
+    def test_unzip_custom_dir(self, forum_zip_archive):
         # arrange
-        zip_file_path, tmp_dir_path = _get_zip_file_path()        
+        zip_file_path, tmp_dir_path = forum_zip_archive        
         unziped_forum_path = self._get_forum_path(tmp_dir_path)
         
         # act
@@ -65,7 +68,8 @@ class SubforumUnzipTestCase(unittest.TestCase):
 
         # assert
         is_forum_unziped = os.path.exists(unziped_forum_path)
-        self.assertTrue(is_forum_unziped, ('Forum archive expected to be unzipped to "%s" ', unziped_forum_path))
+        
+        assert is_forum_unziped
     
     def _get_cwd_foum_path(self):
         return self._get_forum_path(os.getcwd())
@@ -86,5 +90,3 @@ def _get_zip_file_path():
 
     return zip_file_path, zip_file_folder_path
 
-if __name__ == '__main__':
-    unittest.main()
