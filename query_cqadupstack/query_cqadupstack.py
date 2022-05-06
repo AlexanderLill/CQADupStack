@@ -30,15 +30,13 @@ import math
 import zipfile
 import random
 import datetime
-import itertools
 from operator import truediv
 try:  # SciPy >= 0.19
     from scipy.special import comb
 except ImportError:
     from scipy.misc import comb
 from random import randrange
-from six.moves.html_parser import HTMLParser
-from six.moves import range, map
+from html.parser import HTMLParser
 
 # Written by Doris Hoogeveen Nov 2015. For a usage please call the script without arguments.
 
@@ -137,7 +135,7 @@ class Subforum():
 
     def get_all_duplicate_pairs(self):
         """
-        Takes no input an returns a list of duplicate question pairs as tuples of ids.
+        Takes no input and returns a list of duplicate question pairs as tuples of ids.
         """
         duppairs = []
         for p in self.postdict:
@@ -178,7 +176,7 @@ class Subforum():
     def get_posts_with_and_without_duplicates(self):
         """ 
         Takes no input and returns two lists: one with all posts that have at least one duplicate,
-        and one with all posts that don't have any duplicatesIn that order.
+        and one with all posts that don't have any duplicates, in that order.
         Calling this method is quicker than calling get_posts_with_duplicates() followed by get_posts_without_duplicates()
         if you want both dups and non-dups.
         """
@@ -199,7 +197,7 @@ class Subforum():
         Calling this method is quicker than calling get_posts_with_duplicates(), followed by get_posts_with_related(),
         followed by get_posts_without_duplicates() if you want all three types of questions.
         There may be overlap in the list of posts with duplicates and posts with related questions,
-        because posts can have bot duplicates and related questions.
+        because posts can have both duplicates and related questions.
         """
         nodups = []
         dups = []
@@ -846,11 +844,11 @@ class Subforum():
         prevw_in_split = True
         for w in words:
             # It used to be so beautiful and simple, until I found out that NLTK splits some things wrongly...
-            # neww = nltk.PorterStemmer().stem_word(w)
+            # neww = nltk.PorterStemmer().stem(w)
             # newwords.append(neww)
 
             if words_split[counter] == w:  # word was correctly split
-                neww = nltk.PorterStemmer().stem_word(w)
+                neww = nltk.PorterStemmer().stem(w)
                 newwords.append(neww)
                 counter += 1
                 prevw_in_split = True
@@ -861,7 +859,7 @@ class Subforum():
             else:  # this is a subsequent part of a wrongly split word
                 newword = newwords[-1] + w
                 if words_split[counter] == newword:
-                    newwords[-1] = nltk.PorterStemmer().stem_word(newword)
+                    newwords[-1] = nltk.PorterStemmer().stem(newword)
                     counter += 1
                     prevw_in_split = True
                 else:
@@ -972,7 +970,7 @@ class Subforum():
              'who\'s': 'who is', }
         # Some forms of 's could either mean 'is' or 'has' but we've made a choice here.
         # Some forms of 'd could either mean 'had' or 'would' but we've made a choice here.
-        # Some forms of 'll could wither mean 'will' or 'shall' but we've made a choice here.
+        # Some forms of 'll could either mean 'will' or 'shall' but we've made a choice here.
         for pat in c:
             s = re.sub(pat, c[pat], s)
         return s
@@ -1094,7 +1092,7 @@ class Subforum():
 
         # restore URLs
         # reverse list to GGGG1 does not match GGG10. (Source: http://galvanist.com/post/53478841501/python-reverse-enumerate)
-        newurllist = itertools.izip(
+        newurllist = zip(
             reversed(range(len(newurls))), reversed(newurls))
         for i, u in newurllist:
             # Escaping u here leads to backslashes in URLs.
@@ -1110,7 +1108,7 @@ class Subforum():
 
         # restore codeblocks
         # reverse list to hhhh1 does not match hhhh10 (Source: http://galvanist.com/post/53478841501/python-reverse-enumerate)
-        newlist = itertools.izip(reversed(range(len(codes))), reversed(codes))
+        newlist = zip(reversed(range(len(codes))), reversed(codes))
         for i, c in newlist:
             # Escaping here leads to backslashes being added in the code blocks.
             s = re.sub('hhhh' + str(i), c.encode('unicode-escape'), s)
@@ -1325,7 +1323,7 @@ class Subforum():
                         break
 
         # The best candiDATE is the one in the middle.
-        position = len(allcandidates) / 2
+        position = int(len(allcandidates) / 2)
         if allcandidates != []:
             bestdate = allcandidates[position][0]
             self.cutoffdate = datetime.datetime.strptime(bestdate, '%Y-%m-%d')
@@ -1946,7 +1944,4 @@ def usage():
 
 
 if __name__ == "__main__":
-    if len(sys.argv[1:]) != 1:
-        usage()
-    else:
-        main(sys.argv[1])
+    usage()

@@ -11,39 +11,25 @@ query_cqadupstack.py enables easy access to all the different fields in CQADupSt
 
 Please cite the following paper when making use of CQADupStack:
 
+```
 @inproceedings{hoogeveen2015, 
-
  author = {Hoogeveen, Doris and Verspoor, Karin M. and Baldwin, Timothy}, 
-
  title = {CQADupStack: A Benchmark Data Set for Community Question-Answering Research}, 
-
  booktitle = {Proceedings of the 20th Australasian Document Computing Symposium (ADCS)}, 
-
  series = {ADCS '15}, 
-
  year = {2015}, 
-
  isbn = {978-1-4503-4040-3}, 
-
  location = {Parramatta, NSW, Australia}, 
-
  pages = {3:1--3:8}, 
-
  articleno = {3}, 
-
  numpages = {8}, 
-
  url = {http://doi.acm.org/10.1145/2838931.2838934}, 
-
  doi = {10.1145/2838931.2838934}, 
-
  acmid = {2838934}, 
-
  publisher = {ACM}, 
-
  address = {New York, NY, USA}, 
-
-} 
+}
+```
 
 For licensing information please see the LICENCE file.
 
@@ -76,7 +62,7 @@ Here are some examples of how to use the script:
 
     >>>> for i in develset: 
     >...     if o.get_duplicates(i) != []: 
-    >... print i, o.get_duplicates(i) 
+    >... print(i, o.get_duplicates(i))
     >...  
 
     >69050 [u'8710'] 
@@ -90,14 +76,13 @@ Here are some examples of how to use the script:
     >u'What do you consider a "mobile" device?' 
 
     >>>> o.get_postbody('18957') 
-    >u'\<p\>I'm implementing a mobile-friendly version of our corporate web site and will be using \<a href="http://wurfl.sourceforge.net/" rel="nofollow" title="WURFL"\>WURFL\</a\> to detect mobile browsers and redirect them to our mobile site.  Having recently purchased an Android tablet, I've found that many sites consider it to be a mobile device even though it has a large 10" screen and it's perfectly capable of handling sites designed using standard desktop resolutions.\</p\>\<p\>My plan is to use WURFL, examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device, but I'd like some input as to that sweet spot for determining mobile vs desktop.\</p\>
-\' 
+    >u'\<p\>I'm implementing a mobile-friendly version of our corporate web site and will be using \<a href="http://wurfl.sourceforge.net/" rel="nofollow" title="WURFL"\>WURFL\</a\> to detect mobile browsers and redirect them to our mobile site.  Having recently purchased an Android tablet, I've found that many sites consider it to be a mobile device even though it has a large 10" screen and it's perfectly capable of handling sites designed using standard desktop resolutions.\</p\>\<p\>My plan is to use WURFL, examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device, but I'd like some input as to that sweet spot for determining mobile vs desktop.\</p\>' 
 
     >>>> o.perform_cleaning(o.get_postbody('18957')) 
     >u'i am implementing a mobile-friendly version of our corporate web site and will be using wurfl to detect mobile browsers and redirect them to our mobile site . having recently purchased an android tablet , i have found that many sites consider it to be a mobile device even though it has a large 10" screen and it is perfectly capable of handling sites designed using standard desktop resolutions . my plan is to use wurfl , examine the device capabilities and treat anything with a resolution width of less than 700px as a mobile device , but i would like some input as to that sweet spot for determining mobile vs desktop .' 
 
     >>>> for a in o.get_answers('18957'): 
-    >...     print a, o.get_answerscore(a) 
+    >...     print(a, o.get_answerscore(a))
     >...  
     >18985 1 
     >18980 0 
